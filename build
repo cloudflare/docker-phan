@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+
+build() {
+  declare build_files="${*:-versions/**/options}"
+
+  [[ "$BUILDER_IMAGE" ]] || {
+    BUILDER_IMAGE="phan-builder"
+    docker build -t "$BUILDER_IMAGE" builder
+  }
+
+  for file in $build_files; do
+    (
+      source "$file"
+      local version_dir
+      version_dir="$(dirname "$file")"
+      : "${TAGS:?}" "${BUILD_OPTIONS:?}" "${RELEASE:?}"
+      docker run -e "TRACE=$TRACE" --rm "$BUILDER_IMAGE" "${BUILD_OPTIONS[@]}" \
+             > "$version_dir/rootfs.tar.gz"
+
+      for tag in "${TAGS[@]}"; do
+        docker build -t "$tag" "$version_dir"
+      done
+    )
+  done
+}
+
+push() {
+  declare build_files="${*:-versions/**/options}"
+  for file in $build_files; do
+    (
+      source "$file"
+      for tag in "${TAGS[@]}"; do
+        if docker history "$tag" &> /dev/null; then
+          docker push "$tag"
+        fi
+      done
+      exit 0
+    )
+  done
+}
+
+run_tests() {
+  declare build_files="${*:-versions/**/options}"
+  declare -a test_files
+  for file in $build_files; do
+    source "$file"
+    local tag
+    tag="${TAGS[0]}" tag="${tag//:/-}" tag="${tag//\//_}"
+    test_files+=("test/test_${tag}.bats")
+  done
+  bats "${test_files[@]}"
+}
+
+main() {
+  set -eo pipefail; [[ "$TRACE" ]] && set -x
+  declare cmd="$1"
+  case "$cmd" in
+    test) shift; run_tests "$@";;
+    push) shift; push "$@";;
+    *) build "$@";;
+  esac
+}
+
+main "$@"
