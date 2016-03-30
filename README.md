@@ -19,7 +19,7 @@ The easiest way to use `docker-phan` is to create a shell function for “phan�
 that makes makes it nearly transparent that phan is running inside Docker.
 
 ```sh
-phan() { docker run -v $PWD:/mnt/src --rm -u "$(id -u):$(id -g)" cloudflare/phan:latest $@; return $? }
+phan() { docker run -v $PWD:/mnt/src --rm -u "$(id -u):$(id -g)" cloudflare/phan:latest $@; return $?; }
 ```
 
 (You may replace “latest” with a tagged Phan release to use a specific version
