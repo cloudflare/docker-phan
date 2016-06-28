@@ -40,7 +40,7 @@ build() {
 
   # install runtime dependencies into rootfs
   {
-    apk --no-cache --root "$rootfs" --keys-dir /etc/apk/keys add --initdb php7@testing php7-json@testing php7-sqlite3@testing php7-mbstring@testing tini@community
+    apk --no-cache --root "$rootfs" --keys-dir /etc/apk/keys add --initdb php7@testing php7-json@testing php7-sqlite3@testing php7-mbstring@testing php7-pcntl@testing tini@community
     cp /docker-entrypoint.sh "$rootfs"/docker-entrypoint.sh
   } >&2
 
@@ -55,7 +55,7 @@ build() {
     fi
     cd phan
 
-    php7 /usr/local/bin/composer.phar --no-dev --ignore-platform-reqs --no-interaction install
+    php7 /usr/local/bin/composer.phar --prefer-dist --no-dev --ignore-platform-reqs --no-interaction install
     rm -rf .git
   } >&2
 

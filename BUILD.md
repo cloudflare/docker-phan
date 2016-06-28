@@ -39,7 +39,7 @@ Pass version files to the `build` script to build specific versions:
 With `parallel` available you can speed up building a bit:
 
 ```sh
-parallel -m ./build ::: version/**/options
+parallel -m ./build ::: versions/**/options
 ```
 
 ## Testing
