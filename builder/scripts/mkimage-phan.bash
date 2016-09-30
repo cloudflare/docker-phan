@@ -25,7 +25,7 @@ build() {
 
   # install PHP7 dependencies and build dependencies
   {
-    apk --no-cache add php7@community php7-json@community php7-sqlite3@community php7-mbstring@community git build-base autoconf curl php7-dev@community php7-openssl@community php7-phar@community
+    apk --no-cache add php7@community php7-json@community php7-sqlite3@community php7-mbstring@community git build-base autoconf curl php7-dev@community php7-openssl@community php7-phar@community php7-dom@community
   } >&2
 
 
@@ -39,7 +39,7 @@ build() {
 
   # install runtime dependencies into rootfs
   {
-    apk --no-cache --root "$rootfs" --keys-dir /etc/apk/keys add --initdb php7@community php7-json@community php7-sqlite3@community php7-mbstring@community php7-pcntl@community tini@community
+    apk --no-cache --root "$rootfs" --keys-dir /etc/apk/keys add --initdb php7@community php7-json@community php7-sqlite3@community php7-mbstring@community php7-pcntl@community tini@community php7-dom@community
     cp /docker-entrypoint.sh "$rootfs"/docker-entrypoint.sh
   } >&2
 
