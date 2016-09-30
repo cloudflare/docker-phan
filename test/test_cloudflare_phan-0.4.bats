@@ -26,3 +26,10 @@ setup() {
   [ "${lines[0]}" = "./undefined_class.php:3 PhanUndeclaredClassMethod Call to method __construct from undeclared class \stub" ]
   [ "${lines[1]}" = "./undefined_class.php:4 PhanUndeclaredClassConstant Reference to constant TYPE_STRING from undeclared class \stub" ]
 }
+
+@test "checkstyle output format is available" {
+  run docker run -v $PWD/test/fixtures/pass:/mnt/src "cloudflare/phan:0.4" \
+      --output-mode checkstyle -l .
+  [ $status -eq 0 ]
+  [ ${#lines[@]} -eq 2 ]
+}
