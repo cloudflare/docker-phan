@@ -18,15 +18,13 @@ build() {
 
   # configure apk mirror
   {
-    echo "$mirror/v3.3/main"
-    echo "$mirror/v3.3/community"
-    echo "@testing $mirror/edge/testing"
-    echo "@community $mirror/edge/community"
+    echo "$mirror/edge/main"
+    echo "$mirror/edge/community"
   } | tee "/etc/apk/repositories" "$rootfs/etc/apk/repositories" >&2
 
   # install PHP7 dependencies and build dependencies
   {
-    apk --no-cache add php7@testing php7-json@testing php7-sqlite3@testing php7-mbstring@testing git build-base autoconf curl php7-dev@testing php7-openssl@testing php7-phar@testing
+    apk --no-cache add php7 php7-json php7-sqlite3 php7-mbstring git build-base autoconf curl php7-dev php7-openssl php7-phar
   } >&2
 
 
@@ -40,7 +38,7 @@ build() {
 
   # install runtime dependencies into rootfs
   {
-    apk --no-cache --root "$rootfs" --keys-dir /etc/apk/keys add --initdb php7@testing php7-json@testing php7-sqlite3@testing php7-mbstring@testing php7-pcntl@testing tini@community
+    apk --no-cache --root "$rootfs" --keys-dir /etc/apk/keys add --initdb php7 php7-json php7-sqlite3 php7-mbstring php7-pcntl tini
     cp /docker-entrypoint.sh "$rootfs"/docker-entrypoint.sh
   } >&2
 
