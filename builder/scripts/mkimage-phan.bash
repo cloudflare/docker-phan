@@ -31,8 +31,8 @@ build() {
   # install composer
   {
     cd /tmp
-    curl -O https://getcomposer.org/download/1.0.0-alpha11/composer.phar
-    printf "47347f16d366145eafb45d2e800012dc80cb8fc08d1d299849825c51465381ac  composer.phar" | shasum -a 256 -c
+    curl -O https://getcomposer.org/download/1.4.1/composer.phar
+    printf "abd277cc3453be980bb48cbffe9d1f7422ca1ef4bc0b7d035fda87cea4d55cbc  composer.phar" | shasum -a 256 -c
     mv composer.phar /usr/local/bin
   } >&2
 
