@@ -32,7 +32,7 @@ build() {
   {
     cd /tmp
     curl -O https://getcomposer.org/download/1.4.1/composer.phar
-    printf "abd277cc3453be980bb48cbffe9d1f7422ca1ef4bc0b7d035fda87cea4d55cbc  composer.phar" | shasum -a 256 -c
+    printf "abd277cc3453be980bb48cbffe9d1f7422ca1ef4bc0b7d035fda87cea4d55cbc  composer.phar" | sha256sum -c
     mv composer.phar /usr/local/bin
   } >&2
 
