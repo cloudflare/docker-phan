@@ -72,7 +72,7 @@ build() {
   # install php-ast
   {
     cd /tmp
-    git clone -b "v0.1.1" --single-branch --depth 1 https://github.com/nikic/php-ast.git
+    git clone -b "v0.1.5" --single-branch --depth 1 https://github.com/nikic/php-ast.git
     cd php-ast
     phpize7
     ./configure --with-php-config=php-config7
