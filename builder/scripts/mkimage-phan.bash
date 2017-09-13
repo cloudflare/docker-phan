@@ -27,19 +27,31 @@ build() {
     apk --no-cache add php7 php7-json php7-sqlite3 php7-mbstring git build-base autoconf curl php7-dev php7-openssl php7-phar php7-dom
   } >&2
 
-
-  # install composer
-  {
-    cd /tmp
-    curl -O https://getcomposer.org/download/1.0.0-alpha11/composer.phar
-    printf "47347f16d366145eafb45d2e800012dc80cb8fc08d1d299849825c51465381ac  composer.phar" | shasum -a 256 -c
-    mv composer.phar /usr/local/bin
-  } >&2
-
   # install runtime dependencies into rootfs
   {
     apk --no-cache --root "$rootfs" --keys-dir /etc/apk/keys add --initdb php7 php7-json php7-sqlite3 php7-mbstring php7-pcntl php7-dom tini
     cp /docker-entrypoint.sh "$rootfs"/docker-entrypoint.sh
+  } >&2
+
+  # install composer
+  {
+    cd /tmp
+    EXPECTED_SIGNATURE=$(wget -q -O - https://composer.github.io/installer.sig)
+    php7 -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    ACTUAL_SIGNATURE=$(php7 -r "echo hash_file('SHA384', 'composer-setup.php');")
+
+    if [ "$EXPECTED_SIGNATURE" != "$ACTUAL_SIGNATURE" ]
+    then
+      >&2 echo 'ERROR: Invalid installer signature'
+      rm composer-setup.php
+      exit 1
+    fi
+
+    php7 composer-setup.php --quiet
+    RESULT=$?
+    rm composer-setup.php
+    mv composer.phar /usr/local/bin
+    exit $RESULT
   } >&2
 
   # install phan
