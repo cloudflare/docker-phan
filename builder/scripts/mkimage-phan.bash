@@ -5,11 +5,12 @@
 
 declare REL="${REL:-edge}"
 declare MIRROR="${MIRROR:-http://nl.alpinelinux.org/alpine}"
+declare AST="${AST:-0.1.5}"
 
 set -eo pipefail; [[ "$TRACE" ]] && set -x
 
 build() {
-  declare mirror="$1" rel="$2"
+  declare mirror="$1" rel="$2" ast="$3"
 
   # configure rootfs
   local rootfs
@@ -31,8 +32,8 @@ build() {
   # install composer
   {
     cd /tmp
-    curl -O https://getcomposer.org/download/1.0.0-alpha11/composer.phar
-    printf "47347f16d366145eafb45d2e800012dc80cb8fc08d1d299849825c51465381ac  composer.phar" | shasum -a 256 -c
+    curl -O https://getcomposer.org/download/1.5.1/composer.phar
+    printf "2745e7b8cced2e97f84b9e9cb0f9c401702f47cecea5a67f095ac4fa1a44fb80  composer.phar" | sha256sum -c
     mv composer.phar /usr/local/bin
   } >&2
 
@@ -47,9 +48,9 @@ build() {
   {
     cd "$rootfs/opt/"
     if [[ "$rel" == "edge" ]]; then
-      git clone --single-branch --depth 1 https://github.com/etsy/phan.git
+      git clone --single-branch --depth 1 https://github.com/phan/phan.git
     else
-      git clone -b $rel --single-branch --depth 1 https://github.com/etsy/phan.git
+      git clone -b $rel --single-branch --depth 1 https://github.com/phan/phan.git
     fi
     cd phan
 
@@ -60,7 +61,7 @@ build() {
   # install php-ast
   {
     cd /tmp
-    git clone -b "v0.1.1" --single-branch --depth 1 https://github.com/nikic/php-ast.git
+    git clone -b "v${ast}" --single-branch --depth 1 https://github.com/nikic/php-ast.git
     cd php-ast
     phpize7
     ./configure --with-php-config=php-config7
@@ -77,15 +78,16 @@ build() {
 }
 
 main() {
-  while getopts "r:m:s" opt; do
+  while getopts "a:r:m:s" opt; do
     case $opt in
       r) REL="$OPTARG";;
+      a) AST="$OPTARG";;
       m) MIRROR="$OPTARG";;
       s) STDOUT=1;;
     esac
   done
 
-  build "$MIRROR" "$REL"
+  build "$MIRROR" "$REL" "$AST"
 }
 
 main "$@"

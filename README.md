@@ -50,7 +50,7 @@ contributors. See [BUILD.md][build-docs] for more information.
 
 [BSD 2-Clause License][bsd-2-clause]
 
-[phan]: https://github.com/etsy/phan
+[phan]: https://github.com/phan/phan
 [alpine]: http://www.alpinelinux.org/
 [phan-tutorial]: https://github.com/etsy/phan/wiki/Tutorial-for-Analyzing-a-Large-Sloppy-Code-Base
 [docker-alpine]: https://github.com/gliderlabs/docker-alpine

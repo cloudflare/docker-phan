@@ -51,12 +51,28 @@ run_tests() {
   bats "${test_files[@]}"
 }
 
+new_version() {
+  declare version=$1
+  declare ast=${2:-0.1.5}
+  declare template_files="${3:-templates/}"
+
+  mkdir -p "versions/${version}"
+  for file in $template_files/versions/*; do
+    (
+      sed "s:{{.VERSION}}:${version}:g;s:{{.AST}}:${ast}:g"<"$file">"versions/${version}/$(basename "$file")"
+    )
+  done
+
+  sed "s:{{.VERSION}}:${version}:g"<"templates/test/test_cloudflare_phan.bats">"test/test_cloudflare_phan-${version}.bats"
+}
+
 main() {
   set -eo pipefail; [[ "$TRACE" ]] && set -x
   declare cmd="$1"
   case "$cmd" in
     test) shift; run_tests "$@";;
     push) shift; push "$@";;
+    version) shift; new_version "$@";;
     *) build "$@";;
   esac
 }
