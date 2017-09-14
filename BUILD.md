@@ -33,7 +33,7 @@ To build all the images simply run:
 Pass version files to the `build` script to build specific versions:
 
 ```sh
-./build version/edge/options
+./build versions/edge/options
 ```
 
 With `parallel` available you can speed up building a bit:
@@ -57,7 +57,7 @@ built images.
 Run tests for a single image:
 
 ```sh
-./build test version/edge/options
+./build test versions/edge/options
 ```
 
 Run all tests:
