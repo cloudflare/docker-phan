@@ -1,0 +1,5 @@
+export RELEASE="0.9.3"
+export MIRROR="http://mirror.sfo12.us.leaseweb.net/alpine"
+export AST="0.1.5"
+export BUILD_OPTIONS=(-s -r $RELEASE -m $MIRROR -a $AST)
+export TAGS=(cloudflare/phan:0.9.3)

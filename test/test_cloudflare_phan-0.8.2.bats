@@ -1,22 +1,23 @@
 setup() {
-  docker history "cloudflare/phan:0.6" >/dev/null 2>&1
+  export VERSION=0.8.2
+  docker history "cloudflare/phan:${VERSION}" >/dev/null 2>&1
 }
 
 @test "pass arguments to phan" {
-  run docker run -v $PWD/test/fixtures/pass:/mnt/src "cloudflare/phan:0.6" -h
+  run docker run -v $PWD/test/fixtures/pass:/mnt/src "cloudflare/phan:${VERSION}" -h
   [ $status -eq 0 ]
   [ "${lines[0]}" = "Usage: /opt/phan/phan [options] [files...]" ]
 }
 
 @test "outputs zero lines if source has no issues" {
-  run docker run -v $PWD/test/fixtures/pass:/mnt/src "cloudflare/phan:0.6" \
+  run docker run -v $PWD/test/fixtures/pass:/mnt/src "cloudflare/phan:${VERSION}" \
       -l .
   [ $status -eq 0 ]
   [ ${#lines[@]} -eq 0 ]
 }
 
 @test "outputs lines if source has issues" {
-  run docker run -v $PWD/test/fixtures/fail:/mnt/src "cloudflare/phan:0.6" \
+  run docker run -v $PWD/test/fixtures/fail:/mnt/src "cloudflare/phan:${VERSION}" \
       -l .
 
   # even if there's failures, phan reports 1
@@ -28,7 +29,7 @@ setup() {
 }
 
 @test "checkstyle output format is available" {
-  run docker run -v $PWD/test/fixtures/pass:/mnt/src "cloudflare/phan:0.6" \
+  run docker run -v $PWD/test/fixtures/pass:/mnt/src "cloudflare/phan:${VERSION}" \
       --output-mode checkstyle -l .
   [ $status -eq 0 ]
   [ ${#lines[@]} -eq 2 ]
