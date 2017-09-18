@@ -67,9 +67,21 @@ build() {
     ./configure --with-php-config=php-config7
     make INSTALL_ROOT="$rootfs" install
 
-    printf "extension=ast.so" >> "$rootfs"/etc/php7/php.ini
+    echo "extension=ast.so" >> "$rootfs"/etc/php7/php.ini
   } >&2
 
+  # install runkit-object-id for https://github.com/phan/phan/wiki/Speeding-up-Phan-Analysis#7-install-an-optional-c-module
+  # TODO: After releases using php 7.2 exist, omit this step if the installed php version is 7.2+
+  {
+    cd /tmp
+    git clone -b "1.1.0" --single-branch --depth 1 https://github.com/runkit7/runkit_object_id.git
+    cd runkit_object_id
+    phpize7
+    ./configure --with-php-config=php-config7
+    make INSTALL_ROOT="$rootfs" install
+
+    echo "extension=runkit_object_id.so" >> "$rootfs"/etc/php7/php.ini
+  } >&2
 
   tar -z -f rootfs.tar.gz --numeric-owner -C "$rootfs" -c .
   [[ "$STDOUT" ]] && cat rootfs.tar.gz
