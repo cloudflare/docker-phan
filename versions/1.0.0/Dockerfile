@@ -34,6 +34,20 @@ RUN apk --no-cache add git build-base autoconf curl php7-dev php7-openssl php7-p
 
 COPY --from=composer:1.7 /usr/bin/composer /usr/local/bin/composer
 
+# install php-ast
+RUN set -xe; \
+    \
+    mkdir -p /src; \
+    cd /src; \
+    \
+    git clone -b "v${AST_VERSION}" --single-branch --depth 1 https://github.com/nikic/php-ast.git; \
+    \
+    cd php-ast; \
+    phpize7; \
+    ./configure --with-php-config=php-config7; \
+    make install; \
+    echo "extension=ast.so" >> /etc/php7/php.ini
+
 # install phan
 RUN set -xe; \
     \
@@ -49,18 +63,6 @@ RUN set -xe; \
     cd phan; \
     /usr/local/bin/composer --prefer-dist --no-dev --no-interaction install; \
     rm -rf .git
-
-# install php-ast
-RUN set -xe; \
-    \
-    cd /src; \
-    \
-    git clone -b "v${AST_VERSION}" --single-branch --depth 1 https://github.com/nikic/php-ast.git; \
-    \
-    cd php-ast; \
-    phpize7; \
-    ./configure --with-php-config=php-config7; \
-    make install
 
 # Runtime
 # ==========
