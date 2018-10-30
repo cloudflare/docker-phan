@@ -3,22 +3,15 @@
 build() {
   declare build_files="${*:-versions/**/options}"
 
-  [[ "$BUILDER_IMAGE" ]] || {
-    BUILDER_IMAGE="phan-builder"
-    docker build -t "$BUILDER_IMAGE" builder
-  }
-
   for file in $build_files; do
     (
       source "$file"
       local version_dir
       version_dir="$(dirname "$file")"
       : "${TAGS:?}" "${BUILD_OPTIONS:?}" "${RELEASE:?}"
-      docker run -e "TRACE=$TRACE" --rm "$BUILDER_IMAGE" "${BUILD_OPTIONS[@]}" \
-             > "$version_dir/rootfs.tar.gz"
 
       for tag in "${TAGS[@]}"; do
-        docker build -t "$tag" "$version_dir"
+        docker build ${BUILD_OPTIONS[@]} -t "$tag" "$version_dir"
       done
     )
   done
@@ -62,6 +55,7 @@ new_version() {
       sed "s:{{.VERSION}}:${version}:g;s:{{.AST}}:${ast}:g"<"$file">"versions/${version}/$(basename "$file")"
     )
   done
+  chmod +x "versions/${version}/docker-entrypoint.sh"
 
   sed "s:{{.VERSION}}:${version}:g"<"templates/test/test_cloudflare_phan.bats">"test/test_cloudflare_phan-${version}.bats"
 }
