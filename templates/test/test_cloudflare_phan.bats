@@ -24,8 +24,8 @@ setup() {
   [ $status -eq 1 ]
 
   [ ${#lines[@]} -eq 2 ]
-  [ "${lines[0]}" = "./undefined_class.php:3 PhanUndeclaredClassMethod Call to method __construct from undeclared class \Stub" ]
-  [ "${lines[1]}" = "./undefined_class.php:4 PhanUndeclaredClassConstant Reference to constant TYPE_STRING from undeclared class \Stub" ]
+  [ "${lines[0]}" = "undefined_class.php:3 PhanUndeclaredClassMethod Call to method __construct from undeclared class \Stub" ]
+  [ "${lines[1]}" = "undefined_class.php:4 PhanUndeclaredClassConstant Reference to constant TYPE_STRING from undeclared class \Stub" ]
 }
 
 @test "checkstyle output format is available" {

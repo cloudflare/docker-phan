@@ -1,5 +1,5 @@
-export RELEASE="{{.VERSION}}"
+export RELEASE="1.0.0"
 export MIRROR="http://mirror.sfo12.us.leaseweb.net/alpine"
-export AST="{{.AST}}"
+export AST="0.1.7"
 export BUILD_OPTIONS=(--build-arg APK_MIRROR=$MIRROR --build-arg AST_VERSION=$AST --build-arg PHAN_RELEASE=$RELEASE)
-export TAGS=(cloudflare/phan:{{.VERSION}})
+export TAGS=(cloudflare/phan:1.0.0)
