@@ -1,12 +1,11 @@
 setup() {
-  export VERSION=edge
+  VERSION=1.0.0
   docker history "cloudflare/phan:${VERSION}" >/dev/null 2>&1
 }
 
 @test "pass arguments to phan" {
   run docker run -v $PWD/test/fixtures/pass:/mnt/src "cloudflare/phan:${VERSION}" -h
   [ $status -eq 0 ]
-  echo $status
   [ "${lines[0]}" = "Usage: /opt/phan/phan [options] [files...]" ]
 }
 

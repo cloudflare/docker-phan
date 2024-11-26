@@ -1,4 +1,4 @@
-FROM alpine:3.3
+FROM alpine:3.8
 COPY scripts/mkimage-phan.bash /
 COPY scripts/docker-entrypoint.sh /
 RUN apk --no-cache add bash

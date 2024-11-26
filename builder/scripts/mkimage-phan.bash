@@ -39,7 +39,7 @@ build() {
 
   # install runtime dependencies into rootfs
   {
-    apk --no-cache --root "$rootfs" --keys-dir /etc/apk/keys add --initdb php7 php7-json php7-sqlite3 php7-mbstring php7-pcntl php7-dom tini
+    apk --no-cache --root "$rootfs" --keys-dir /etc/apk/keys add --initdb php7 php7-json php7-sqlite3 php7-mbstring php7-pcntl php7-dom php7-tokenizer tini
     cp /docker-entrypoint.sh "$rootfs"/docker-entrypoint.sh
   } >&2
 
